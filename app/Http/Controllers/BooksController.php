@@ -3,7 +3,6 @@
     namespace App\Http\Controllers;
 
     use App\Models\Books;
-    use App\Models\Authors;
 
     use Illuminate\Http\Response;
     use App\Traits\ApiResponser;
@@ -21,10 +20,9 @@
         }
         
         public function getBooks(){
-            $books = DB::connection('mysql')->select('Select * from tblbooks');
-            $author = DB::connection('mysql')->select('Select * from tblauthors');
+            $books = Books::all();
 
-            return $this->successResponse($books, $author);
+            return $this->successResponse($books);
         }
 
         /**
@@ -42,15 +40,12 @@
             $rules = [
                 'bookname' => 'required|min:1|not_in:0',
                 'yearpublish' => 'required|min:1|not_in:0', 
-                'id' => 'required|numeric|min:1|not_in:0',
+                'jobid' => 'required|numeric|min:1|not_in:0',
             ];
 
             $this->validate($request, $rules);
-
-            $author = Authors::findOrFail($request->authorid);
-            $book = Books::create($request->all());
-
-            return $this->successResponse($book, Response::HTTP_CREATED);
+            $books = Books::create($request->all());
+            return $this->successResponse($books, Response::HTTP_CREATED);
         }
 
         /**
@@ -60,8 +55,8 @@
         
         public function show($id){
             
-            $book = Books::findOrFail($id);
-            return $this->successResponse($book);
+            $books = Books::findOrFail($id);
+            return $this->successResponse($books);
         
         }
 
@@ -73,24 +68,19 @@
             $rules = [
                 'bookname' => 'required|min:1|not_in:0',
                 'yearpublish' => 'required|min:1|not_in:0',
-                'id' => 'required|numeric|min:1|not_in:0',
+                'jobid' => 'required|numeric|min:1|not_in:0',
             ];
 
             $this->validate($request, $rules);
+            $books = Books::findOrFail($id);
 
-            $book = Books::where('id', $id)->first();
-            $author = Authors::findOrFail($request->authorid);
-
-            if ($book){
-            $book->fill($request->all());
+            $books->fill($request->all());
             // if no changes happen
-            if ($book->isClean()) {
-                return $this->errorResponse('At least one value must change', 
-                Response::HTTP_UNPROCESSABLE_ENTITY);
+            if ($books->isClean()) {
+                return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $book->save();
-            return $this->successResponse($book);
-            }
+            $books->save();
+            return $this->successResponse($books);
         }
 
         /**
@@ -99,8 +89,8 @@
          */
 
          public function delete($id){
-             $book = Books::findOrFail($id);
-             $book->delete();
+             $books = Books::findOrFail($id);
+             $books->delete();
              return $this->errorResponse('Book ID Does Not Exists', Response::HTTP_NOT_FOUND);
          }
 
