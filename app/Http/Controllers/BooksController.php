@@ -5,7 +5,7 @@
     use App\Models\Books;
 
     use Illuminate\Http\Response;
-    use App\Traits\ApiResponser;
+    use App\Traits\ApiResponser;    
     use Illuminate\Http\Request;
     use DB;
 
@@ -38,9 +38,10 @@
 
         public function add(Request $request){
             $rules = [
+                'id' => 'required|numeric|min:1|not_in:0',
                 'bookname' => 'required|min:1|not_in:0',
                 'yearpublish' => 'required|min:1|not_in:0', 
-                'jobid' => 'required|numeric|min:1|not_in:0',
+                'authorid' => 'required|numeric|min:1|not_in:0',
             ];
 
             $this->validate($request, $rules);
@@ -66,22 +67,26 @@
         */
         public function update(Request $request, $id){
             $rules = [
+                'id' => 'required|numeric|min:1|not_in:0',
                 'bookname' => 'required|min:1|not_in:0',
                 'yearpublish' => 'required|min:1|not_in:0',
-                'jobid' => 'required|numeric|min:1|not_in:0',
+                'authorid' => 'required|numeric|min:1|not_in:0',
             ];
 
             $this->validate($request, $rules);
             $books = Books::findOrFail($id);
 
+            if ($books){
             $books->fill($request->all());
             // if no changes happen
             if ($books->isClean()) {
-                return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->errorResponse('At least one value must change', 
+                Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $books->save();
             return $this->successResponse($books);
         }
+    }
 
         /**
          * Remove an existing book
@@ -96,4 +101,4 @@
 
 }
 
-?>
+?>  

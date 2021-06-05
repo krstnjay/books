@@ -23,10 +23,6 @@ $router->get('/books', 'BooksController@index'); // get all books records
 $router->post('/books', 'BooksController@add'); // create new book record
 $router->get('/books/{id}', 'BooksController@show'); // get book by id
 $router->put('/books/{id}', 'BooksController@update'); // update book record
-$router->patch('/books/{id}', 'BooksController@update'); // update book record
 $router->delete('/books/{id}', 'BooksController@delete'); // delete record
-
-// $router->get('/usersjob', 'UserJobController@index');
-// $router->get('/usersjob/{id}', 'UserJobController@show');
 
 ?>

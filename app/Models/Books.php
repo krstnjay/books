@@ -10,7 +10,7 @@ class Books extends Model {
         'id', 'bookname', 'yearpublish', 'authorid',
     ];
 
-    public $timestamp = false;
+    public $timestamps = false;
     protected $primaryKey = 'id';
 }
 
