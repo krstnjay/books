@@ -96,7 +96,7 @@
          public function delete($id){
              $books = Books::findOrFail($id);
              $books->delete();
-             return $this->errorResponse('Book ID Does Not Exists', Response::HTTP_NOT_FOUND);
+             return $this->successResponse($books);
          }
 
 }
